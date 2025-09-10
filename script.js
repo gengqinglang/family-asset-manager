@@ -405,32 +405,182 @@ document.addEventListener('DOMContentLoaded', () => {
 // 添加一些示例数据（仅在首次使用时）
 if (!localStorage.getItem('familyAssets')) {
     const sampleAssets = [
+        // 现金资产
         {
             id: '1',
-            name: '现金',
+            name: '家庭备用现金',
             type: 'cash',
-            amount: 5000,
-            description: '家庭备用现金',
+            amount: 8000,
+            description: '日常开销备用金',
             date: '2024-01-01',
             createdAt: '2024-01-01T00:00:00.000Z'
         },
         {
             id: '2',
+            name: '零花钱',
+            type: 'cash',
+            amount: 2000,
+            description: '个人零用钱',
+            date: '2024-01-15',
+            createdAt: '2024-01-15T00:00:00.000Z'
+        },
+        
+        // 银行资产
+        {
+            id: '3',
             name: '工商银行储蓄卡',
             type: 'bank',
-            amount: 50000,
+            amount: 120000,
             description: '主要储蓄账户',
             date: '2024-01-01',
             createdAt: '2024-01-01T00:00:00.000Z'
         },
         {
-            id: '3',
+            id: '4',
+            name: '建设银行定期存款',
+            type: 'bank',
+            amount: 50000,
+            description: '一年期定期存款',
+            date: '2024-02-01',
+            createdAt: '2024-02-01T00:00:00.000Z'
+        },
+        {
+            id: '5',
+            name: '招商银行信用卡',
+            type: 'bank',
+            amount: -5000,
+            description: '信用卡欠款',
+            date: '2024-03-01',
+            createdAt: '2024-03-01T00:00:00.000Z'
+        },
+        
+        // 投资资产
+        {
+            id: '6',
+            name: '股票投资',
+            type: 'investment',
+            amount: 80000,
+            description: 'A股市场投资',
+            date: '2024-01-10',
+            createdAt: '2024-01-10T00:00:00.000Z'
+        },
+        {
+            id: '7',
             name: '基金投资',
             type: 'investment',
-            amount: 30000,
-            description: '股票型基金',
+            amount: 45000,
+            description: '混合型基金',
             date: '2024-01-15',
             createdAt: '2024-01-15T00:00:00.000Z'
+        },
+        {
+            id: '8',
+            name: '理财产品',
+            type: 'investment',
+            amount: 30000,
+            description: '银行理财产品',
+            date: '2024-02-10',
+            createdAt: '2024-02-10T00:00:00.000Z'
+        },
+        
+        // 房产
+        {
+            id: '9',
+            name: '自住房产',
+            type: 'property',
+            amount: 2800000,
+            description: '三室两厅，120平米',
+            date: '2020-05-01',
+            createdAt: '2020-05-01T00:00:00.000Z'
+        },
+        {
+            id: '10',
+            name: '投资房产',
+            type: 'property',
+            amount: 1500000,
+            description: '两室一厅，用于出租',
+            date: '2022-08-15',
+            createdAt: '2022-08-15T00:00:00.000Z'
+        },
+        
+        // 车辆
+        {
+            id: '11',
+            name: '家用轿车',
+            type: 'vehicle',
+            amount: 180000,
+            description: '2021年购买，行驶3万公里',
+            date: '2021-03-20',
+            createdAt: '2021-03-20T00:00:00.000Z'
+        },
+        {
+            id: '12',
+            name: '电动车',
+            type: 'vehicle',
+            amount: 8000,
+            description: '日常代步工具',
+            date: '2023-06-01',
+            createdAt: '2023-06-01T00:00:00.000Z'
+        },
+        
+        // 珠宝首饰
+        {
+            id: '13',
+            name: '黄金项链',
+            type: 'jewelry',
+            amount: 15000,
+            description: '18K金项链，30克',
+            date: '2023-12-25',
+            createdAt: '2023-12-25T00:00:00.000Z'
+        },
+        {
+            id: '14',
+            name: '钻石戒指',
+            type: 'jewelry',
+            amount: 25000,
+            description: '1克拉钻石戒指',
+            date: '2022-02-14',
+            createdAt: '2022-02-14T00:00:00.000Z'
+        },
+        
+        // 古董收藏
+        {
+            id: '15',
+            name: '清代花瓶',
+            type: 'antique',
+            amount: 120000,
+            description: '清代青花瓷花瓶',
+            date: '2021-10-01',
+            createdAt: '2021-10-01T00:00:00.000Z'
+        },
+        {
+            id: '16',
+            name: '字画收藏',
+            type: 'antique',
+            amount: 80000,
+            description: '现代名家字画',
+            date: '2023-05-01',
+            createdAt: '2023-05-01T00:00:00.000Z'
+        },
+        
+        // 其他资产
+        {
+            id: '17',
+            name: '保险现金价值',
+            type: 'other',
+            amount: 35000,
+            description: '人寿保险现金价值',
+            date: '2024-01-01',
+            createdAt: '2024-01-01T00:00:00.000Z'
+        },
+        {
+            id: '18',
+            name: '公积金账户',
+            type: 'other',
+            amount: 85000,
+            description: '住房公积金余额',
+            date: '2024-01-01',
+            createdAt: '2024-01-01T00:00:00.000Z'
         }
     ];
     localStorage.setItem('familyAssets', JSON.stringify(sampleAssets));
