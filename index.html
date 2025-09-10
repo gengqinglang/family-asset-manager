@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家庭资产管理</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- 头部 -->
+        <header class="header">
+            <h1><i class="fas fa-wallet"></i> 家庭资产管理</h1>
+            <div class="total-assets">
+                <span class="total-label">总资产</span>
+                <span class="total-amount" id="totalAmount">¥0</span>
+            </div>
+        </header>
+
+        <!-- 导航栏 -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>概览</span>
+            </button>
+            <button class="nav-tab" data-tab="assets">
+                <i class="fas fa-list"></i>
+                <span>资产</span>
+            </button>
+            <button class="nav-tab" data-tab="add">
+                <i class="fas fa-plus"></i>
+                <span>添加</span>
+            </button>
+            <button class="nav-tab" data-tab="statistics">
+                <i class="fas fa-chart-bar"></i>
+                <span>统计</span>
+            </button>
+        </nav>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 概览页面 -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>现金资产</h3>
+                            <p class="stat-amount" id="cashTotal">¥0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>银行资产</h3>
+                            <p class="stat-amount" id="bankTotal">¥0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>投资资产</h3>
+                            <p class="stat-amount" id="investmentTotal">¥0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>固定资产</h3>
+                            <p class="stat-amount" id="propertyTotal">¥0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>资产分布</h3>
+                    <canvas id="assetChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 资产列表页面 -->
+            <div class="tab-content" id="assets">
+                <div class="assets-header">
+                    <h2>我的资产</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="cash">现金</button>
+                        <button class="filter-btn" data-filter="bank">银行</button>
+                        <button class="filter-btn" data-filter="investment">投资</button>
+                        <button class="filter-btn" data-filter="property">固定资产</button>
+                    </div>
+                </div>
+                <div class="assets-list" id="assetsList">
+                    <!-- 资产列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 添加资产页面 -->
+            <div class="tab-content" id="add">
+                <div class="add-asset-form">
+                    <h2>添加资产</h2>
+                    <form id="assetForm">
+                        <div class="form-group">
+                            <label for="assetName">资产名称</label>
+                            <input type="text" id="assetName" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assetType">资产类型</label>
+                            <select id="assetType" name="type" required>
+                                <option value="">请选择类型</option>
+                                <option value="cash">现金</option>
+                                <option value="bank">银行存款</option>
+                                <option value="investment">投资理财</option>
+                                <option value="property">房产</option>
+                                <option value="vehicle">车辆</option>
+                                <option value="jewelry">珠宝首饰</option>
+                                <option value="antique">古董收藏</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assetAmount">资产金额</label>
+                            <input type="number" id="assetAmount" name="amount" step="0.01" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assetDescription">备注说明</label>
+                            <textarea id="assetDescription" name="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assetDate">购买/获得日期</label>
+                            <input type="date" id="assetDate" name="date" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-plus"></i> 添加资产
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 统计分析页面 -->
+            <div class="tab-content" id="statistics">
+                <div class="statistics-content">
+                    <h2>统计分析</h2>
+                    
+                    <div class="stats-section">
+                        <h3>资产类型分布</h3>
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                    
+                    <div class="stats-section">
+                        <h3>月度资产变化</h3>
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h4>资产总数</h4>
+                            <p id="totalCount">0</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>平均价值</h4>
+                            <p id="avgValue">¥0</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>最高价值</h4>
+                            <p id="maxValue">¥0</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>最低价值</h4>
+                            <p id="minValue">¥0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 编辑资产模态框 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑资产</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId" name="id">
+                <div class="form-group">
+                    <label for="editName">资产名称</label>
+                    <input type="text" id="editName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editType">资产类型</label>
+                    <select id="editType" name="type" required>
+                        <option value="cash">现金</option>
+                        <option value="bank">银行存款</option>
+                        <option value="investment">投资理财</option>
+                        <option value="property">房产</option>
+                        <option value="vehicle">车辆</option>
+                        <option value="jewelry">珠宝首饰</option>
+                        <option value="antique">古董收藏</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editAmount">资产金额</label>
+                    <input type="number" id="editAmount" name="amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">备注说明</label>
+                    <textarea id="editDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editDate">购买/获得日期</label>
+                    <input type="date" id="editDate" name="date" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelEdit">取消</button>
+                    <button type="submit" class="btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
