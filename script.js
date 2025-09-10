@@ -4,8 +4,6 @@ class AssetManager {
         this.assets = this.loadAssets();
         this.currentFilter = 'all';
         this.charts = {};
-        this.currentTab = 'dashboard';
-        this.previousTab = null;
         
         this.init();
     }
@@ -66,17 +64,10 @@ class AssetManager {
         document.getElementById('backBtn').addEventListener('click', () => {
             this.goBack();
         });
-
-        // 添加移动端手势支持（可选）
-        this.setupTouchGestures();
     }
 
     // 切换标签页
     switchTab(tabName) {
-        // 记录上一个标签页
-        this.previousTab = this.currentTab;
-        this.currentTab = tabName;
-
         // 更新导航标签状态
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.classList.remove('active');
@@ -88,9 +79,6 @@ class AssetManager {
             content.classList.remove('active');
         });
         document.getElementById(tabName).classList.add('active');
-
-        // 显示/隐藏返回按钮
-        this.updateBackButton();
 
         // 根据标签页更新内容
         if (tabName === 'dashboard') {
@@ -204,58 +192,16 @@ class AssetManager {
         document.getElementById('editModal').classList.remove('active');
     }
 
-    // 更新返回按钮显示状态
-    updateBackButton() {
-        const backBtn = document.getElementById('backBtn');
-        
-        // 只有在非概览页面且不是从概览页面跳转过来时才显示返回按钮
-        if (this.currentTab !== 'dashboard' && this.previousTab && this.previousTab !== 'dashboard') {
-            backBtn.style.display = 'flex';
-        } else {
-            backBtn.style.display = 'none';
-        }
-    }
-
-    // 返回上一页
+    // 返回上一页（浏览器级别）
     goBack() {
-        if (this.previousTab) {
-            this.switchTab(this.previousTab);
+        // 检查是否有历史记录可以返回
+        if (window.history.length > 1) {
+            window.history.back();
         } else {
-            // 如果没有上一页，默认返回概览页面
-            this.switchTab('dashboard');
+            // 如果没有历史记录，可以跳转到首页或其他页面
+            // 这里可以根据需要修改跳转地址
+            window.location.href = '/';
         }
-    }
-
-    // 设置移动端手势支持
-    setupTouchGestures() {
-        let startX = 0;
-        let startY = 0;
-        
-        document.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        });
-        
-        document.addEventListener('touchend', (e) => {
-            if (!startX || !startY) return;
-            
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            
-            const diffX = startX - endX;
-            const diffY = startY - endY;
-            
-            // 检测右滑手势（从屏幕左边缘开始）
-            if (startX < 50 && diffX > 100 && Math.abs(diffY) < 100) {
-                const backBtn = document.getElementById('backBtn');
-                if (backBtn.style.display !== 'none') {
-                    this.goBack();
-                }
-            }
-            
-            startX = 0;
-            startY = 0;
-        });
     }
 
     // 渲染资产列表

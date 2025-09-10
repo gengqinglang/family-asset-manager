@@ -50,12 +50,23 @@ body {
     margin-right: 0.5rem;
 }
 
+/* 总资产显示栏 */
+.total-assets-bar {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 80px;
+    z-index: 99;
+}
+
 .total-assets {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.5rem;
 }
 
 /* 返回按钮样式 */
