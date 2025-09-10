@@ -13,7 +13,6 @@ class AssetManager {
         this.setupEventListeners();
         this.updateDashboard();
         this.renderAssets();
-        this.updateStatistics();
         this.setDefaultDate();
     }
 
@@ -81,8 +80,6 @@ class AssetManager {
             this.updateDashboard();
         } else if (tabName === 'assets') {
             this.renderAssets();
-        } else if (tabName === 'statistics') {
-            this.updateStatistics();
         }
     }
 
@@ -118,7 +115,6 @@ class AssetManager {
         this.saveAssets();
         this.updateDashboard();
         this.renderAssets();
-        this.updateStatistics();
         
         form.reset();
         this.setDefaultDate();
@@ -168,7 +164,6 @@ class AssetManager {
             this.saveAssets();
             this.updateDashboard();
             this.renderAssets();
-            this.updateStatistics();
             this.closeModal();
             
             this.showToast('资产更新成功！');
@@ -182,7 +177,6 @@ class AssetManager {
             this.saveAssets();
             this.updateDashboard();
             this.renderAssets();
-            this.updateStatistics();
             
             this.showToast('资产删除成功！');
         }
@@ -342,169 +336,6 @@ class AssetManager {
         });
     }
 
-    // 更新统计页面
-    updateStatistics() {
-        this.updateTypeChart();
-        this.updateTrendChart();
-        this.updateStatsGrid();
-    }
-
-    // 更新资产类型分布图表
-    updateTypeChart() {
-        const ctx = document.getElementById('typeChart');
-        if (!ctx) return;
-
-        const totals = this.calculateTotals();
-        const data = [
-            { label: '现金', value: totals.cash },
-            { label: '银行', value: totals.bank },
-            { label: '投资', value: totals.investment },
-            { label: '房产', value: totals.property },
-            { label: '车辆', value: totals.vehicle },
-            { label: '珠宝', value: totals.jewelry },
-            { label: '古董', value: totals.antique },
-            { label: '其他', value: totals.other }
-        ].filter(item => item.value > 0);
-
-        if (this.charts.typeChart) {
-            this.charts.typeChart.destroy();
-        }
-
-        this.charts.typeChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.map(item => item.label),
-                datasets: [{
-                    label: '资产金额',
-                    data: data.map(item => item.value),
-                    backgroundColor: '#CAF4F7',
-                    borderColor: '#A8E6E8',
-                    borderWidth: 2,
-                    borderRadius: 8,
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `¥${context.parsed.y.toLocaleString()}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '¥' + value.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // 更新趋势图表
-    updateTrendChart() {
-        const ctx = document.getElementById('trendChart');
-        if (!ctx) return;
-
-        // 生成最近6个月的数据
-        const months = [];
-        const data = [];
-        const now = new Date();
-        
-        for (let i = 5; i >= 0; i--) {
-            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            months.push(date.toLocaleDateString('zh-CN', { month: 'short' }));
-            
-            // 计算该月之前的资产总额（模拟数据）
-            const monthAssets = this.assets.filter(asset => {
-                const assetDate = new Date(asset.date);
-                return assetDate <= date;
-            });
-            
-            const monthTotal = monthAssets.reduce((sum, asset) => sum + asset.amount, 0);
-            data.push(monthTotal);
-        }
-
-        if (this.charts.trendChart) {
-            this.charts.trendChart.destroy();
-        }
-
-        this.charts.trendChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: '资产总额',
-                    data: data,
-                    borderColor: '#CAF4F7',
-                    backgroundColor: 'rgba(202, 244, 247, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#CAF4F7',
-                    pointBorderColor: '#A8E6E8',
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `¥${context.parsed.y.toLocaleString()}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '¥' + value.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // 更新统计网格
-    updateStatsGrid() {
-        const totals = this.calculateTotals();
-        
-        document.getElementById('totalCount').textContent = this.assets.length;
-        document.getElementById('avgValue').textContent = `¥${this.formatNumber(totals.total / Math.max(this.assets.length, 1))}`;
-        
-        if (this.assets.length > 0) {
-            const amounts = this.assets.map(asset => asset.amount);
-            document.getElementById('maxValue').textContent = `¥${this.formatNumber(Math.max(...amounts))}`;
-            document.getElementById('minValue').textContent = `¥${this.formatNumber(Math.min(...amounts))}`;
-        } else {
-            document.getElementById('maxValue').textContent = '¥0';
-            document.getElementById('minValue').textContent = '¥0';
-        }
-    }
 
     // 获取类型标签
     getTypeLabel(type) {
