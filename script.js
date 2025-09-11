@@ -13,7 +13,7 @@ class AssetManager {
         this.setupEventListeners();
         this.updateDashboard();
         this.renderAssets();
-        this.setDefaultDate();
+
     }
 
     // 设置事件监听器
@@ -112,7 +112,6 @@ class AssetManager {
             type: formData.get('type'),
             amount: parseFloat(formData.get('amount')),
             description: formData.get('description'),
-            date: formData.get('date'),
             createdAt: new Date().toISOString()
         };
 
@@ -122,7 +121,7 @@ class AssetManager {
         this.renderAssets();
         
         form.reset();
-        this.setDefaultDate();
+
         
         this.showToast('资产添加成功！');
         
@@ -141,7 +140,7 @@ class AssetManager {
         document.getElementById('editType').value = asset.type;
         document.getElementById('editAmount').value = asset.amount;
         document.getElementById('editDescription').value = asset.description;
-        document.getElementById('editDate').value = asset.date;
+
 
         // 显示模态框
         document.getElementById('editModal').classList.add('active');
@@ -162,7 +161,6 @@ class AssetManager {
                 type: formData.get('type'),
                 amount: parseFloat(formData.get('amount')),
                 description: formData.get('description'),
-                date: formData.get('date'),
                 updatedAt: new Date().toISOString()
             };
 
@@ -212,7 +210,6 @@ class AssetManager {
         if (filteredAssets.length === 0) {
             assetsList.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-wallet"></i>
                     <h3>暂无资产</h3>
                     <p>点击"添加"标签页来添加您的第一个资产</p>
                 </div>
@@ -230,7 +227,6 @@ class AssetManager {
                     <div class="asset-amount">¥${this.formatNumber(asset.amount)}</div>
                 </div>
                 <div class="asset-details">
-                    <p><i class="fas fa-calendar"></i> ${this.formatDate(asset.date)}</p>
                     ${asset.description ? `<p><i class="fas fa-comment"></i> ${asset.description}</p>` : ''}
                 </div>
                 <div class="asset-actions">
@@ -377,17 +373,7 @@ class AssetManager {
         });
     }
 
-    // 格式化日期
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('zh-CN');
-    }
 
-    // 设置默认日期
-    setDefaultDate() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('assetDate').value = today;
-    }
 
     // 显示提示消息
     showToast(message) {
@@ -429,7 +415,7 @@ if (!localStorage.getItem('familyAssets')) {
             type: 'cash',
             amount: 8000,
             description: '日常开销备用金',
-            date: '2024-01-01',
+
             createdAt: '2024-01-01T00:00:00.000Z'
         },
         {
@@ -438,7 +424,7 @@ if (!localStorage.getItem('familyAssets')) {
             type: 'cash',
             amount: 2000,
             description: '个人零用钱',
-            date: '2024-01-15',
+
             createdAt: '2024-01-15T00:00:00.000Z'
         },
         
@@ -458,7 +444,7 @@ if (!localStorage.getItem('familyAssets')) {
             type: 'bank',
             amount: 50000,
             description: '一年期定期存款',
-            date: '2024-02-01',
+
             createdAt: '2024-02-01T00:00:00.000Z'
         },
         {
@@ -467,7 +453,7 @@ if (!localStorage.getItem('familyAssets')) {
             type: 'bank',
             amount: -5000,
             description: '信用卡欠款',
-            date: '2024-03-01',
+
             createdAt: '2024-03-01T00:00:00.000Z'
         },
         
@@ -478,7 +464,7 @@ if (!localStorage.getItem('familyAssets')) {
             type: 'investment',
             amount: 80000,
             description: 'A股市场投资',
-            date: '2024-01-10',
+
             createdAt: '2024-01-10T00:00:00.000Z'
         },
         {
@@ -496,7 +482,7 @@ if (!localStorage.getItem('familyAssets')) {
             type: 'investment',
             amount: 30000,
             description: '银行理财产品',
-            date: '2024-02-10',
+
             createdAt: '2024-02-10T00:00:00.000Z'
         },
         
